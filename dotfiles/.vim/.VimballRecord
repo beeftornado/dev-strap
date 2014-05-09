@@ -1,0 +1,3 @@
+IndentConsistencyCop.vim: call delete('/Users/casey.duquette/.vim/autoload/IndentConsistencyCop.vim')|call delete('/Users/casey.duquette/.vim/plugin/IndentConsistencyCop.vim')|call delete('/Users/casey.duquette/.vim/doc/IndentConsistencyCop.txt')
+IndentConsistencyCopAutoCmds.vim: call delete('/Users/casey.duquette/.vim/plugin/IndentConsistencyCopAutoCmds.vim')|call delete('/Users/casey.duquette/.vim/doc/IndentConsistencyCopAutoCmds.txt')
+IndentConsistencyCop.vim: call delete('/Users/casey.duquette/.vim/autoload/IndentConsistencyCop.vim')|call delete('/Users/casey.duquette/.vim/plugin/IndentConsistencyCop.vim')|call delete('/Users/casey.duquette/.vim/doc/IndentConsistencyCop.txt')

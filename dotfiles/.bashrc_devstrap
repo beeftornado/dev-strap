@@ -1,0 +1,106 @@
+################################################################################
+#************* Helper functions for the ENV variables **************************
+################################################################################
+pathadd() {
+    # Add a path to PATH iff it is not already present
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="${PATH:+"$PATH:"}$1"
+    fi
+}
+			
+################################################################################
+#******************** Environment Variables ************************************
+################################################################################
+
+# Clean path
+if [ -x /usr/libexec/path_helper ]; then
+	PATH=""	#PATH (to avoid rvm warning)
+	eval `/usr/libexec/path_helper -s`
+fi
+
+# PATH update
+PATH="/usr/local/bin:$PATH"
+pathadd "/usr/local/share/npm/bin"
+pathadd "$HOME/.rvm/bin"
+unset MANPATH
+
+# Virtualenvwrapper setup
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
+if [ -x /usr/local/bin/virtualenvwrapper.sh ]; then
+     source /usr/local/bin/virtualenvwrapper.sh
+fi
+
+# Node version manager (NVM) setup
+[ -s $HOME/.nvm/nvm.sh ] && . $HOME/.nvm/nvm.sh # This loads NVM
+
+# Node path to installed modules
+export NODE_PATH=/usr/local/lib/node_modules
+
+# Byobu terminal multiplexer
+export BYOBU_PREFIX=$(brew --prefix)
+
+# Powerline (shell customization) init
+if [ -f /usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh ]; then
+    source /usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
+fi
+
+################################################################################
+#***************************** Aliases *****************************************
+################################################################################
+
+alias sync_code_down="rsync -avzP --compress-level=9 --delete --no-perms --ignore-errors elscaseydev03.server.hulu.com:~/Code/ ~/Code"
+alias sync_code_up="rsync -avzP --compress-level=9 --delete --no-perms --ignore-errors ~/Code/ elscaseydev03.server.hulu.com:~/Code"
+alias remove_trailing_space="sed -i '' 's/[[:space:]]*$//'"
+alias pip-sync="pip freeze | grep -iv -f requirements.txt - | xargs pip uninstall -y && pip install -r requirements.txt"
+alias gitlog_to_changelog="~/Code/gitlog-to-changelog.sh --append-dot --strip-cherry-pick -- --no-merges"
+alias ls="ls -Ghoa"
+
+################################################################################
+#************************ Utility Functions ************************************
+################################################################################
+
+# ******************** Setup SSH key authentication ****************************
+
+SSH_ENV="$HOME/.ssh/environment"
+
+function start_agent {
+     echo "Initializing new SSH agent..."
+     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+     echo succeeded
+     chmod 600 "${SSH_ENV}"
+     . "${SSH_ENV}" > /dev/null
+     /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+     . "${SSH_ENV}" > /dev/null
+     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+         start_agent;
+     }
+else
+     start_agent;
+fi
+
+################################################################################
+
+# ********************* Send local bashrc to remote ****************************
+
+# Wrapper for ssh to automatically source bash config file on remote machine.
+# Sources ~/.bashrc_remote
+#
+# author Jonah Dahlquist
+# license CC0
+
+sshs() {
+        ssh ${*:1} "cat > /tmp/.bashrc_temp" < ~/.bashrc
+        ssh -t ${*:1} "bash --rcfile /tmp/.bashrc_temp ; rm /tmp/.bashrc_temp"
+}
+
+################################################################################
+
+export PATH=/usr/local/share/npm/bin:$PATH
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

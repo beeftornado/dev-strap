@@ -1,0 +1,55 @@
+{
+	"default_module": "powerline.segments.common",
+	"segment_data": {
+		"uptime": {
+			"before": "⇑  "
+		},
+		"date": {
+			"before": "⌚ "
+		},
+		"branch": {
+                         "before": " ",
+                         "args": {
+                                 "status_colors": true
+                       }
+                },
+                "battery": {
+                        "before": "🔋 ",
+                        "args": {
+                                "format": "{capacity:3.0%}"
+                        }
+                }
+	},
+	"segments": {
+		"right": [
+			{
+				"name": "uptime",
+				"priority": 50
+			},
+			{
+				"name": "cpu_load",
+				"module": "ext.tmux.segments.ps"
+			},
+			{
+				"name": "date"
+			},
+			{
+				"name": "date",
+				"args": {
+					"format": "%H:%M",
+					"istime": true
+				}
+			},
+                        {
+                                "name": "battery"
+                        },
+			{
+				"name": "weather",
+				"args": {
+					"unit": "F",
+					"location_query": "90404"
+				}
+			}
+		]
+	}
+}
