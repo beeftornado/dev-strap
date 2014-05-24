@@ -12,7 +12,12 @@
 #     try mount -o remount,rw /boot
 #     next
 
+# Clean the screen
 clear
+
+cat ../logo
+
+echo
 
 # OSX version requirement
 if [[ ! $(sw_vers -productVersion | egrep '10.[89]')  ]]
@@ -24,7 +29,6 @@ fi
 # Disk space requirement
 df -H / | grep -vE '^Filesystem|tmpfs|cdrom' | awk '{ print $5 " " $1 }' | while read output;
 do
-  echo $output
   usep=$(echo $output | awk '{ print $1}' | cut -d'%' -f1  )
   partition=$(echo $output | awk '{ print $2 }' )
   if [ $usep -ge 90 ]; then
@@ -34,12 +38,33 @@ do
   fi
 done
 
-step "Installing homebrew: "
-if [ ! -f /usr/local/bin/brew ]; then
-  try ruby -e "$(\curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-  next
+# Continuation
+echo "This program will do its best to configure your system for application "
+echo "development. It can be used for new or on existing setups."
+echo
+echo "Please submit bug or feature requests to https://github.com/beeftornado/dev-strap"
+echo
+echo "You will be presented with a menu where you can pick and choose the components you want."
+echo
+
+confirm "To continue, we require Homebrew. If you already have it, great, if not we will install it for you. Continue?"
+CONTINUE=$?
+
+echo
+
+if [[ $CONTINUE -eq 1 ]]; then
+
+  step "Installing homebrew: "
+  if [ ! -f /usr/local/bin/brew ]; then
+    try ruby -e "$(\curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+    next
+  else
+    skip
+  fi
+
 else
-  skip
+  echo "Aborting."
+  exit 0
 fi
 
 step "Installing whiptail (pretty menu): "
@@ -50,14 +75,15 @@ else
   skip
 fi
 
-menu=(whiptail --separate-output --title "Install Options" --checklist "Select the dev options you want (I recommend having all):" 0 0 0)
+menu=(whiptail --separate-output --title "Install Options" --checklist "\nSelect the dev options you want (I recommend having all):\n\n[spacebar] = toggle on/off" 0 0 0)
 options=(1 "Python, pip, virtualenv" on
         2 "NodeJS, NVM" on
         3 "Ruby, RVM" on
         4 "Mysql, Mongo" on
         5 "Common dependencies from Homebrew" on
         6 "Development tools (apps like editors)" on
-        7 "Additional apps everyone should have (like chrome)" on)
+        7 "Additional apps everyone should have (like chrome)" on
+        8 "Internet Explorer VM (will be prompted for versions later)" off)
 choices=$("${menu[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
 if [[ $? -ne 0 ]]; then
