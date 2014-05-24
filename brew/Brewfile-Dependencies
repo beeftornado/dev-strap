@@ -1,0 +1,16 @@
+update
+
+# taps
+tap homebrew/dupes
+
+# brew install
+install newt
+install byobu
+install homebrew/dupes/rsync
+install ctags
+install reattach-to-user-namespace
+install git-extras
+
+# casks support
+tap phinze/cask
+install brew-cask

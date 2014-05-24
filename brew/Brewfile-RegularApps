@@ -1,33 +1,6 @@
-update
-
-# taps
-tap homebrew/dupes
-
-# brew install
-install newt
-install byobu
-install homebrew/dupes/rsync
-install ctags
-install reattach-to-user-namespace
-install git-extras
-
 # casks support
 tap phinze/cask
 install brew-cask
-
-# brew cask install dev tools
-cask install iterm2
-cask install atom
-cask install brackets
-cask install pycharm
-cask install eclipse
-cask install cord
-cask install mysqlworkbench
-cask install sequel-pro
-cask install sourcetree
-cask install sqldeveloper
-cask install textmate
-cask install virtualbox
 
 # brew cask install apps
 cask install adium
@@ -46,4 +19,5 @@ cask install the-unarchiver
 cask install xquartz
 cask install cakebrew
 cask install narrative-uploader
-cask install nike-connect
+cask install nike-plus-connect
+cask install alfred

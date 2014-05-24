@@ -7,22 +7,23 @@ pathadd() {
         PATH="${PATH:+"$PATH:"}$1"
     fi
 }
-			
+
 ################################################################################
 #******************** Environment Variables ************************************
 ################################################################################
 
 # Clean path
-if [ -x /usr/libexec/path_helper ]; then
-	PATH=""	#PATH (to avoid rvm warning)
-	eval `/usr/libexec/path_helper -s`
-fi
+#if [ -x /usr/libexec/path_helper ]; then
+     #PATH=""     #PATH (to avoid rvm warning)
+     #eval `/usr/libexec/path_helper -s`
+#fi
 
 # PATH update
-PATH="/usr/local/bin:$PATH"
+#PATH="/usr/local/bin:$PATH"
+pathadd "/usr/local/bin"
 pathadd "/usr/local/share/npm/bin"
 pathadd "$HOME/.rvm/bin"
-unset MANPATH
+#unset MANPATH
 
 # Virtualenvwrapper setup
 export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
@@ -48,11 +49,8 @@ fi
 #***************************** Aliases *****************************************
 ################################################################################
 
-alias sync_code_down="rsync -avzP --compress-level=9 --delete --no-perms --ignore-errors elscaseydev03.server.hulu.com:~/Code/ ~/Code"
-alias sync_code_up="rsync -avzP --compress-level=9 --delete --no-perms --ignore-errors ~/Code/ elscaseydev03.server.hulu.com:~/Code"
 alias remove_trailing_space="sed -i '' 's/[[:space:]]*$//'"
 alias pip-sync="pip freeze | grep -iv -f requirements.txt - | xargs pip uninstall -y && pip install -r requirements.txt"
-alias gitlog_to_changelog="~/Code/gitlog-to-changelog.sh --append-dot --strip-cherry-pick -- --no-merges"
 alias ls="ls -Ghoa"
 
 ################################################################################

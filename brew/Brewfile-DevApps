@@ -1,16 +1,3 @@
-update
-
-# taps
-tap homebrew/dupes
-
-# brew install
-install newt
-install byobu
-install homebrew/dupes/rsync
-install ctags
-install reattach-to-user-namespace
-install git-extras
-
 # casks support
 tap phinze/cask
 install brew-cask
@@ -28,22 +15,3 @@ cask install sourcetree
 cask install sqldeveloper
 cask install textmate
 cask install virtualbox
-
-# brew cask install apps
-cask install adium
-cask install hipchat
-cask install transmission
-cask install truecrypt
-cask install google-chrome
-cask install vlc
-cask install firefox
-cask install appcleaner
-cask install evernote
-cask install nosleep
-cask install gimp
-cask install teamviewer
-cask install the-unarchiver
-cask install xquartz
-cask install cakebrew
-cask install narrative-uploader
-cask install nike-connect
