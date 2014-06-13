@@ -1,7 +1,3 @@
-# casks support
-tap phinze/cask
-install brew-cask
-
 # brew cask install dev tools
 cask install iterm2
 cask install atom

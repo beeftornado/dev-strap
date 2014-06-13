@@ -1,7 +1,3 @@
-# casks support
-tap phinze/cask
-install brew-cask
-
 # brew cask install apps
 cask install adium
 cask install hipchat
@@ -10,14 +6,10 @@ cask install truecrypt
 cask install google-chrome
 cask install vlc
 cask install firefox
-cask install appcleaner
-cask install evernote
 cask install nosleep
 cask install gimp
 cask install teamviewer
 cask install the-unarchiver
 cask install xquartz
 cask install cakebrew
-cask install narrative-uploader
-cask install nike-plus-connect
 cask install alfred
