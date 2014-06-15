@@ -1,5 +1,5 @@
 # brew cask install apps
-cask install appcleaner
-cask install evernote
-cask install narrative-uploader
-cask install nike-plus-connect
+cask install appcleaner || true
+cask install evernote || true
+cask install narrative-uploader || true
+cask install nike-plus-connect || true

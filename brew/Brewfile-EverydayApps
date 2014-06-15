@@ -1,15 +1,15 @@
 # brew cask install apps
-cask install adium
-cask install hipchat
-cask install transmission
-cask install truecrypt
-cask install google-chrome
-cask install vlc
-cask install firefox
-cask install nosleep
-cask install gimp
-cask install teamviewer
-cask install the-unarchiver
-cask install xquartz
-cask install cakebrew
-cask install alfred
+cask install adium || true
+cask install hipchat || true
+cask install transmission || true
+cask install truecrypt || true
+cask install google-chrome || true
+cask install vlc || true
+cask install firefox || true
+cask install nosleep || true
+cask install gimp || true
+cask install teamviewer || true
+cask install the-unarchiver || true
+cask install xquartz || true
+cask install cakebrew || true
+cask install alfred || true

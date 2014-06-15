@@ -168,10 +168,12 @@ if [[ $SETUP_PYTHON ]]; then
       fi
     fi
 
-    try brew install pyenv > /dev/null 2>/tmp/dev-strap.err
-    if [[ $? -ne 0 ]]; then
-        cat /tmp/dev-strap.err
-        rm /tmp/dev-strap.err
+    if [[ ! $(which pyenv) ]]; then
+      try brew install pyenv > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+          cat /tmp/dev-strap.err
+          rm /tmp/dev-strap.err
+      fi
     fi
     next
 else
@@ -204,14 +206,16 @@ fi
 
 step "Installing python virtual env: "
 if [[ $SETUP_PYTHON ]]; then
+  if [[ ! $(which virtualenv) ]]; then
     try pip install virtualenv virtualenvwrapper > /dev/null 2>/tmp/dev-strap.err
     if [[ $? -ne 0 ]]; then
         cat /tmp/dev-strap.err
         rm /tmp/dev-strap.err
     fi
-    next
+  fi
+  next
 else
-    skip
+  skip
 fi
 
 step "Bootstrapping virtualenvwrapper: "
@@ -404,14 +408,13 @@ fi
 
 step "Installing Internet Explorer VMs: "
 if [[ $SETUP_IE ]]; then
-
   # Prompt user for versions wanted
   menu=(whiptail --separate-output --title "Internet Explorer Setup" --checklist "\nSelect the versions of Internet Explorer to install:\n\n[spacebar] = toggle on/off" 0 0 0)
-  options=(1 "Internet Explorer 6 w/ winXP" on
-          2 "Internet Explorer 7 w/ winXP" on
-          3 "Internet Explorer 8 w/ winXP" on
-          4 "Internet Explorer 9 w/ win7" on
-          5 "Internet Explorer 10 w/ win7" on
+  options=(1 "Internet Explorer 6 w/ winXP" off
+          2 "Internet Explorer 7 w/ winXP" off
+          3 "Internet Explorer 8 w/ winXP" off
+          4 "Internet Explorer 9 w/ win7" off
+          5 "Internet Explorer 10 w/ win7" off
           6 "Internet Explorer 11 w/ win7" on)
   choices=$("${menu[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
@@ -452,27 +455,23 @@ if [[ $SETUP_IE ]]; then
     esac
   done
 
-  SELECTED_IE_VERSIONS = $(echo $SELECTED_IE_VERSIONS | sed 's/^ *//')
+  SELECTED_IE_VERSIONS=$(echo $SELECTED_IE_VERSIONS | sed 's/^ *//')
 
   # Requires virtual box
-  stat /Applications/VirtualBox.app
+  stat /Applications/VirtualBox.app > /dev/null 2>/dev/null
   if [[ $? -ne 0 ]]; then
-    stat ~/Applications/VirtualBox.app
+    stat ~/Applications/VirtualBox.app > /dev/null 2>/dev/null
     if [[ $? -ne 0 ]]; then
-    # No virtualbox install it
-    try brew cask install virtualbox > /dev/null 2>/tmp/dev-strap.err
-    if [[ $? -ne 0 ]]; then
-        cat /tmp/dev-strap.err
-        rm /tmp/dev-strap.err
+      # No virtualbox install it
+      try brew cask install virtualbox > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+          cat /tmp/dev-strap.err
+          rm /tmp/dev-strap.err
+      fi
     fi
   fi
 
-  try curl -s https://raw.githubusercontent.com/xdissent/ievms/master/ievms.sh | env IEVMS_VERSIONS="$SELECTED_IE_VERSIONS" bash > /dev/null 2>/tmp/dev-strap.err
-  if [[ $? -ne 0 ]]; then
-      cat /tmp/dev-strap.err
-      rm /tmp/dev-strap.err
-  fi
-
+  try curl -s https://raw.githubusercontent.com/xdissent/ievms/master/ievms.sh | env IEVMS_VERSIONS="$SELECTED_IE_VERSIONS" bash
   next
 else
   skip

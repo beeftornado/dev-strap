@@ -1,8 +1,8 @@
-update
+update || true
 
 # taps
-tap homebrew/dupes
+tap homebrew/dupes || true
 
 # casks support
-tap phinze/cask
-tap caskroom/versions
+tap phinze/cask || true
+tap caskroom/versions || true

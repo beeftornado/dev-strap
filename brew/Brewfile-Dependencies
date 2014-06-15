@@ -1,19 +1,19 @@
 # brew install
-install newt
-install byobu
-install homebrew/dupes/rsync
-install ctags
-install reattach-to-user-namespace
-install git-extras
-install brew-cask
-install libevent
-install nasm
-install openssl
-install unixodbc
-install wget
-install yasm
-install glib
-install libev
-install cmake
-install autoconf
-install automake
+install newt || true
+install byobu || true
+install homebrew/dupes/rsync || true
+install ctags || true
+install reattach-to-user-namespace || true
+install git-extras || true
+install brew-cask || true
+install libevent || true
+install nasm || true
+install openssl || true
+install unixodbc || true
+install wget || true
+install yasm || true
+install glib || true
+install libev || true
+install cmake || true
+install autoconf || true
+install automake || true
