@@ -84,7 +84,8 @@ options=(1 "Python with pyenv, pip, and virtualenv" on
         6 "Development tools (apps like editors)" on
         7 "Additional apps for normal people (like chrome, adium, vlc)" off
         8 "beeftornado's additional specialty apps" off
-        9 "Internet Explorer VM (will be prompted for versions later)" off)
+        9 "Internet Explorer VM (will be prompted for versions later)" off
+        10 "C# IDE Xamarin Studio" off)
 choices=$("${menu[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
 if [[ $? -ne 0 ]]; then
@@ -127,6 +128,9 @@ do
   ;;
   9)
       SETUP_IE=0
+  ;;
+  10)
+      SETUP_XAMARIN=0
   ;;
   esac
 done
@@ -472,6 +476,15 @@ if [[ $SETUP_IE ]]; then
   fi
 
   try curl -s https://raw.githubusercontent.com/xdissent/ievms/master/ievms.sh | env IEVMS_VERSIONS="$SELECTED_IE_VERSIONS" bash
+  next
+else
+  skip
+fi
+
+step "Installing .NET development IDE Xamarin Studio: "
+if [[ $SETUP_XAMARIN ]]; then
+  try brew cask install xamarin-studio > /dev/null 2>/dev/null
+  try brew cask install mono-mdk > /dev/null 2>/dev/null
   next
 else
   skip
