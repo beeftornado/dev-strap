@@ -3,7 +3,7 @@
 ## Usage
 
 ```sh
-curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh)
 ```
 
 ## Who wants it
@@ -39,7 +39,7 @@ This is just one example of developer tools that aren't straight forward to setu
 Wouldn't it be easier and less intimidating to just pop open a terminal and do
 
 ```
-curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh)
 ```
 
 Nothing else is required except the basic shell.
