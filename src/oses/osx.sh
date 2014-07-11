@@ -1,6 +1,8 @@
 #!/bin/bash
 
-. ./functions.sh
+. $( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )/config.sh
+. $ROOT/src/utilities/functions.sh
+
 
 # Use step(), try(), and next() to perform a series of commands and print
 # [  OK  ] or [FAILED] at the end. The step as a whole fails if any individual
@@ -15,7 +17,7 @@
 # Clean the screen
 clear
 
-cat ../logo
+cat $ROOT/logo
 
 echo
 
@@ -46,8 +48,12 @@ echo "Please submit bug or feature requests to https://github.com/beeftornado/de
 echo
 echo "You will be presented with a menu where you can pick and choose the components you want."
 echo
-
-confirm "To continue, we require Homebrew, a package management tool for OSX. If you already have it, great, if not we will install it for you. Continue?"
+echo "ATTENTION"
+echo "---------"
+echo "To continue, we require Homebrew, a package management tool for OSX. If you already have it, great,"
+echo "if not we will install it for you."
+echo
+confirm "Continue?"
 CONTINUE=$?
 
 echo
@@ -137,7 +143,7 @@ done
 
 
 step "Bootstrapping homebrew: "
-try brew bundle ../brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err
+try brew bundle $ROOT/brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err
 if [[ $? -ne 0 ]]; then
     cat /tmp/dev-strap.err
     rm /tmp/dev-strap.err
@@ -262,7 +268,7 @@ fi
 
 step "Installing common required libraries: "
 if [[ $SETUP_HOMEBREW_COMMONS ]]; then
-  try brew bundle ../brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err
+  try brew bundle $ROOT/brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -376,7 +382,7 @@ fi
 
 step "Installing various developer tools: "
 if [[ $SETUP_DEV_APPS ]]; then
-  try brew bundle ../brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err
+  try brew bundle $ROOT/brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -388,7 +394,7 @@ fi
 
 step "Installing various everyday applications: "
 if [[ $SETUP_COMMON_APPS ]]; then
-  try brew bundle ../brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err
+  try brew bundle $ROOT/brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -400,7 +406,7 @@ fi
 
 step "Installing special applications: "
 if [[ $SETUP_SPECIALTY_APPS ]]; then
-  try brew bundle ../brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err
+  try brew bundle $ROOT/brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
