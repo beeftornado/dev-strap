@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Project root to use for self referencing other files
-ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
-
 # Project repo url
 REPO="https://github.com/beeftornado/dev-strap.git"
 
@@ -34,7 +31,7 @@ trap "rm -rf $TMP_DIR" EXIT
 $GIT clone $REPO $TMP_DIR && cd $TMP_DIR
 
 # Run the setup script
-SETUP_FILE=$ROOT/src/oses/$PLATFORM.sh
+SETUP_FILE="src/oses/$PLATFORM.sh"
 if [[ -e $SETUP_FILE ]]
 then
   . $SETUP_FILE

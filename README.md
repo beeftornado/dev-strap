@@ -119,12 +119,6 @@ All features are optional installs that you pick and choose on the initial menu.
 * Installs Internet Explorer (any combination of versions) into their own virtual machine (free and legal from Microsoft)
 * C# development tools - Separate because of the size of the install
 
-## Usage
-
-```sh
-curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh | bash
-```
-
 ## Screenshots
 
 ![MainMenu](img/main-menu.png)
