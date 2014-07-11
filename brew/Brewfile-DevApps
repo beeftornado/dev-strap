@@ -11,3 +11,5 @@ cask install sourcetree || true
 cask install sqldeveloper || true
 cask install textmate || true
 cask install virtualbox || true
+cask install codelite || true
+install wxwidgets || true
