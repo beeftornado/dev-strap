@@ -1,5 +1,11 @@
 # Devstrap
 
+## Usage
+
+```sh
+curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh | bash
+```
+
 ## Who wants it
 
 <img src="img/hamster-icon.png" height="90px" align="left" style="margin-right: 25px" />
