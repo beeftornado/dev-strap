@@ -31,7 +31,7 @@ trap "rm -rf $TMP_DIR" EXIT
 $GIT clone $REPO $TMP_DIR && cd $TMP_DIR
 
 # Run the setup script
-SETUP_FILE="src/oses/$PLATFORM.sh"
+SETUP_FILE="$TMP_DIR/src/oses/$PLATFORM.sh"
 if [[ -e $SETUP_FILE ]]
 then
   . $SETUP_FILE
