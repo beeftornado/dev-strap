@@ -86,6 +86,7 @@ All features are optional installs that you pick and choose on the initial menu.
  * autoconf - An extensible package of M4 macros that produce shell scripts to automatically configure software source code packages
  * automake - A tool for automatically generating Makefile.in files compliant with the GNU Coding Standards
  * pngquant - A command-line utility and a library for lossy compression of PNG images
+ * ssh-copy-id - A utility to securely setup passwordless authentication
 * Installs applications many developers use including:
  * iterm2 - A better terminal
  * atom - A text editor from GitHub
