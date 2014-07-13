@@ -2,7 +2,7 @@
 cask install iterm2 || true
 cask install atom || true
 cask install brackets || true
-cask install pycharm || true
+cask install pycharm-ce || true
 cask install eclipse || true
 cask install cord || true
 cask install mysqlworkbench || true
