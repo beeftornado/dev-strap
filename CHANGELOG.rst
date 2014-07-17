@@ -1,6 +1,27 @@
 Changelog
 =========
 
+0.2 (2014-07-17)
+----------------
+
+New
+~~~
+
+- Added a new homebrew subcommand called rmtree and updated readme doc
+  with a todo list. [Casey]
+
+- Include ssh-copy-id for osx setup. [Casey]
+
+Changes
+~~~~~~~
+
+- Changelog. [Casey Duquette]
+
+Fix
+~~~
+
+- Pycharm -> pycharm community edition. [Casey]
+
 0.1.1 (2014-07-11)
 ------------------
 
