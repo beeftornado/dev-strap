@@ -2,6 +2,7 @@ update || true
 
 # taps
 tap homebrew/dupes || true
+tap beeftornado/rmtree || true
 
 # casks support
 tap phinze/cask || true

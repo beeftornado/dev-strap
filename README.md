@@ -6,9 +6,13 @@
 bash <(curl -s https://raw.githubusercontent.com/beeftornado/dev-strap/master/src/run.sh)
 ```
 
+## Screenshots
+
+![MainMenu](img/main-menu.png)
+
 ## Who wants it
 
-<img src="img/hamster-icon.png" height="90px" align="left" style="margin-right: 25px" />
+<img src="img/hamster-icon.png" height="120px" align="left" hspace="20" style="margin-right: 25px" />
 
 * Are you a noob?
 * Are you an intern?
@@ -60,13 +64,15 @@ Even if you are familiar with what it is you have to install, it's annoying. You
 
 All features are optional installs that you pick and choose on the initial menu.
 
+> **TLDR;** Sets up some common dev tools (my opinion anyway) automatically, like python, nodejs, ruby, mysql, and also some great IDE's/editors for them.
+
 * Compatible with OSX and Linux
  * Tested on Mavericks and Ubuntu
 * Installs python with pyenv, pip, and virtualenv
 * Installs nodejs with nvm and npm
 * Installs ruby with rvm
 * Installs Mysql and Mongo client + server libraries
-* Installs system libraries that are common to development projects including:
+* Installs system libraries that are common dependencies to development projects including:
  * newt - Actually required by this project to show it's menu. It includes the `whiptail` program
  * byobu - A tmux-like terminal window manager
  * homebrew/dupes/rsync - An up-to-date `rsync` version that is better than the one bundled with osx
@@ -83,10 +89,12 @@ All features are optional installs that you pick and choose on the initial menu.
  * glib - GNU library support building
  * libev - An event loop that is loosely modelled after libevent
  * cmake - A cross-platform make
- * autoconf - An extensible package of M4 macros that produce shell scripts to automatically configure software source code packages
- * automake - A tool for automatically generating Makefile.in files compliant with the GNU Coding Standards
+ * autoconf - Produces shell scripts to automatically configure source code packages
+ * automake - Generating Makefile.in files compliant with the GNU Coding Standards
  * pngquant - A command-line utility and a library for lossy compression of PNG images
  * ssh-copy-id - A utility to securely setup passwordless authentication
+ * brew-rmtree - A new homebrew subcommand to remove a package plus all its unused dependencies
+ * lxml2 - Xml development headers
 * Installs applications many developers use including:
  * iterm2 - A better terminal
  * atom - A text editor from GitHub
@@ -120,9 +128,14 @@ All features are optional installs that you pick and choose on the initial menu.
 * Installs Internet Explorer (any combination of versions) into their own virtual machine (free and legal from Microsoft)
 * C# development tools - Separate because of the size of the install
 
-## Screenshots
+## Todo / Ideas
 
-![MainMenu](img/main-menu.png)
+* Command line arguments to select features and skip the menu making it non-interactive.
+* Vim and Shell customizations via the dotfiles that are already included.
+* Environment fixing tools.
+ * Check that all formula dependencies are installed. Had a case today where someone had mysql installed but somehow lost their dependencies. Doing a `brew info mysql` showed red X's next to both dependencies. It would be nice if this script could automatically clear up any such issues. To fix he had to `brew unlink mysql && brew install mysql`
+* Should the script install homebrew on linux?
+* Automatic versioning & changelog
 
 ## License
 

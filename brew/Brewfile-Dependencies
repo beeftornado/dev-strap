@@ -19,3 +19,5 @@ install autoconf || true
 install automake || true
 install pngquant || true
 install ssh-copy-id || true
+install brew-rmtree || true
+install lxml2 || true
