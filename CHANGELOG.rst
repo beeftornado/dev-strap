@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.2.1 (2014-07-17)
+------------------
+
+Changes
+~~~~~~~
+
+- When running the installer, instead of running off current master, use
+  the latest release, which is supposedly more stable. [Casey]
+
 0.2 (2014-07-17)
 ----------------
 
@@ -14,6 +23,8 @@ New
 
 Changes
 ~~~~~~~
+
+- Changelog. [Casey]
 
 - Changelog. [Casey Duquette]
 
