@@ -30,6 +30,11 @@ trap "rm -rf $TMP_DIR" EXIT
 # Download the project
 $GIT clone $REPO $TMP_DIR && cd $TMP_DIR
 
+# Checkout latest release
+$GIT fetch --tags
+latestTag=$($GIT describe --tags `$GIT rev-list --tags --max-count=1`)
+$GIT checkout $latestTag
+
 # Run the setup script
 SETUP_FILE="$TMP_DIR/src/oses/$PLATFORM.sh"
 if [[ -e $SETUP_FILE ]]
