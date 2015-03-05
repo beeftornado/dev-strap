@@ -1,6 +1,31 @@
 Changelog
 =========
 
+%%version%% (unreleased)
+------------------------
+
+Changes
+~~~~~~~
+
+- Update license file. [Casey Duquette]
+
+Other
+~~~~~
+
+- Hide the jenv init output. [Casey Duquette]
+
+0.3.1 (2015-03-05)
+------------------
+
+- Add error handling if whiptail exists, but is broken. [Casey Duquette]
+
+0.3 (2015-03-05)
+----------------
+
+- More brew bundle changes + intellij. [Casey]
+
+- Homebrew deprecated bundle command and added jdk. [Casey]
+
 0.2.1 (2014-07-17)
 ------------------
 

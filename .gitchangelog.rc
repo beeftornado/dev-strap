@@ -76,7 +76,7 @@ replace_regexps = {
     ## current format (ie: 'chg: dev: my commit msg @tag1 @tag2')
 
     r'^([cC]hg|[fF]ix|[nN]ew)\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n@]*)(@[a-z]+\s+)*$':
-	r'\4',
+    r'\4',
 }
 
 
@@ -89,7 +89,7 @@ replace_regexps = {
 ##
 section_regexps = [
     ('New', [
-	r'^[nN]ew\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
+    r'^[nN]ew\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
      ]),
     ('Changes', [
         r'^[cC]hg\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
@@ -158,3 +158,11 @@ output_engine = rest_py
 #output_engine = mustache("restructuredtext")
 #output_engine = mustache("markdown")
 #output_engine = makotemplate("restructuredtext")
+
+
+## ``include_merges`` is a boolean
+##
+## This option tells git-log whether to include merge commits in the log.
+## The default is to include them.
+include_merges = False
+
