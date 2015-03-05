@@ -78,7 +78,14 @@ if [ ! -f /usr/local/bin/whiptail ]; then
   try brew install newt
   next
 else
-  skip
+  # Test if whiptail broken
+  whiptail -v > /dev/null 2>/dev/null
+  if [[ $? -ne 0 ]]; then
+    try brew reinstall newt
+    next
+  else
+    skip
+  fi
 fi
 
 menu=(whiptail --separate-output --title "Install Options" --checklist "\nSelect the dev options you want (I recommend having all):\n\n[spacebar] = toggle on/off" 0 0 0)
