@@ -151,7 +151,7 @@ done
 
 
 step "Bootstrapping homebrew: "
-try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err)
+try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err)
 if [[ $? -ne 0 ]]; then
     cat /tmp/dev-strap.err
     rm /tmp/dev-strap.err
@@ -276,7 +276,7 @@ fi
 
 step "Installing common required libraries: "
 if [[ $SETUP_HOMEBREW_COMMONS ]]; then
-  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -442,7 +442,7 @@ fi
 
 step "Installing various developer tools: "
 if [[ $SETUP_DEV_APPS ]]; then
-  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -454,7 +454,7 @@ fi
 
 step "Installing various everyday applications: "
 if [[ $SETUP_COMMON_APPS ]]; then
-  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -466,7 +466,7 @@ fi
 
 step "Installing special applications: "
 if [[ $SETUP_SPECIALTY_APPS ]]; then
-  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err

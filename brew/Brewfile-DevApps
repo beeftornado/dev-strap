@@ -12,4 +12,5 @@ cask install sqldeveloper || true
 cask install textmate || true
 cask install virtualbox || true
 cask install codelite || true
+cask install intellij-idea-ce || true
 install wxwidgets || true

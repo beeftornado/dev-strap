@@ -5,5 +5,6 @@ tap homebrew/dupes || true
 tap beeftornado/rmtree || true
 
 # casks support
+tap caskroom/cask || true
 tap phinze/cask || true
 tap caskroom/versions || true

@@ -2,7 +2,8 @@
 cask install adium || true
 cask install hipchat || true
 cask install transmission || true
-cask install truecrypt || true
+#cask install truecrypt || true
+#cask install veracrypt || true
 cask install google-chrome || true
 cask install vlc || true
 cask install firefox || true

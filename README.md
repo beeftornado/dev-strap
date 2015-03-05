@@ -50,7 +50,7 @@ Nothing else is required except the basic shell.
 
 ### Scenario B (the intern)
 
-So you just showed up to work. You get a branch new computer with nothing people actually use pre-installed. Some of you probably already have a set of things you immediately install, others maybe like the vanilla a bit better. But you're about to learn a harsh truth. Your college doesn't teach you jack about the real world. How many schools expose you to developing with [NodeJS](http://nodejs.org)? Using Python virtual environments? Managing multiple versions of Ruby? Using [Mongo](http://mongodb.org) databases? Finding the system libraries that many development projects depend on (i.e. libevent)?
+So you just showed up to work. You get a brand new computer with nothing people actually use pre-installed. Some of you probably already have a set of things you immediately install, others maybe like the vanilla a bit better. But you're about to learn a harsh truth. Your college doesn't teach you jack about the real world. How many schools expose you to developing with [NodeJS](http://nodejs.org)? Using Python virtual environments? Managing multiple versions of Ruby? Using [Mongo](http://mongodb.org) databases? Finding the system libraries that many development projects depend on (i.e. libevent)?
 
 The usual process of getting a project to start up involves rinsing and repeating until you get it. You checkout the project, do what you can decipher out of any pre-existing readme or setup document, try to run the project, search Google for errors, fix errors, try to run again. That process continues until you finally get it to run after a very dissapointing first day of work.
 
@@ -67,10 +67,11 @@ All features are optional installs that you pick and choose on the initial menu.
 > **TLDR;** Sets up some common dev tools (my opinion anyway) automatically, like python, nodejs, ruby, mysql, and also some great IDE's/editors for them.
 
 * Compatible with OSX and Linux
- * Tested on Mavericks and Ubuntu
+ * Tested on Mavericks and Ubuntu and Yosemite
 * Installs python with pyenv, pip, and virtualenv
 * Installs nodejs with nvm and npm
 * Installs ruby with rvm
+* Installs java 6 and 7 with jenv to manage versions
 * Installs Mysql and Mongo client + server libraries
 * Installs system libraries that are common dependencies to development projects including:
  * newt - Actually required by this project to show it's menu. It includes the `whiptail` program
@@ -100,6 +101,7 @@ All features are optional installs that you pick and choose on the initial menu.
  * atom - A text editor from GitHub
  * brackets - A text editor from Adobe
  * pycharm - A python IDE
+ * IntelliJ - IDE, similar to eclipse
  * eclipse - A multipurpose IDE
  * cord - An RDP tool, alternative to Microsoft Remote Desktop
  * mysqlworkbench - Mysql's official IDE
@@ -114,7 +116,8 @@ All features are optional installs that you pick and choose on the initial menu.
  * adium - Instant messaging application
  * hipchat - Common enterprise instant messaging client
  * transmission - Bittorrent client
- * truecrypt - Encryption software
+ * ~~truecrypt - Encryption software~~ (Removed from caskroom)
+ * ~~veracrypt - Newer encryption software~~ (Removed from caskroom)
  * google-chrome - Chrome web browser
  * vlc - Can play almost any kind of media file
  * firefox - Mozilla's web browser
