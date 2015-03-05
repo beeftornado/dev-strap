@@ -28,22 +28,22 @@ mkvirtualenv "$vname"
 workon "$vname"
 
 if [ -f requirements.txt ]; then
-	# install required python modules
-	pip install -r requirements.txt -i http://pypi.prod.hulu.com/simple
+    # install required python modules
+    pip install -r requirements.txt
 fi
 if [ -f src/requirements.txt ]; then
-	# install required python modules
-	pip install -r src/requirements.txt -i http://pypi.prod.hulu.com/simple
+    # install required python modules
+    pip install -r src/requirements.txt
 fi
 
 if [ -f package.json ]; then
-	# install node.js and npm package manager (for node.js packages)
-	npm install .   # if there's a package.json file
+    # install node.js and npm package manager (for node.js packages)
+    npm install .   # if there's a package.json file
 else
-	# ...and if not
-	npm install coffee-script@1.4.0 -g
-	npm install less -g
-	npm install uglify-js -g
+    # ...and if not
+    npm install coffee-script@1.4.0 -g
+    npm install less -g
+    npm install uglify-js -g
 fi
 
 sudo apt-get install mongodb

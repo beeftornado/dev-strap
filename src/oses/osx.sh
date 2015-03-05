@@ -22,9 +22,9 @@ cat $ROOT/logo
 echo
 
 # OSX version requirement
-if [[ ! $(sw_vers -productVersion | egrep '10.[89]')  ]]
+if [[ ! $(sw_vers -productVersion | egrep '10.([89]|10)')  ]]
 then
-  echo "This script is only certified for OSX versions 10.8 (Mountain Lion) and 10.9 (Mavericks), aborting..."
+  echo "This script is only certified for OSX versions 10.8 (Mountain Lion), 10.9 (Mavericks), and 10.10 (Yosemite), aborting..."
   exit 1
 fi
 
@@ -82,16 +82,18 @@ else
 fi
 
 menu=(whiptail --separate-output --title "Install Options" --checklist "\nSelect the dev options you want (I recommend having all):\n\n[spacebar] = toggle on/off" 0 0 0)
-options=(1 "Python with pyenv, pip, and virtualenv" on
-        2 "NodeJS with nvm and npm" on
-        3 "Ruby with rvm" on
-        4 "Mysql and Mongo" on
-        5 "Common libraries from Homebrew" on
-        6 "Development tools (apps like editors)" on
-        7 "Additional apps for normal people (like chrome, adium, vlc)" off
-        8 "beeftornado's additional specialty apps" off
-        9 "Internet Explorer VM (will be prompted for versions later)" off
-        10 "C# IDE Xamarin Studio" off)
+options=(1 "Python with pyenv (version manager), pip, and virtualenv" on
+        2 "NodeJS with nvm (version manager) and npm" on
+        3 "Ruby with rvm (version manager)" on
+        4 "Java 6 with jenv (version manager)" on
+        5 "Java 7 with jenv (version manager)" on
+        6 "Mysql and Mongo" on
+        7 "Common libraries from Homebrew" on
+        8 "Development tools (apps like editors and IDEs)" on
+        9 "Additional apps for normal people (like chrome, adium, vlc)" off
+        10 "beeftornado's additional specialty apps" off
+        11 "Internet Explorer VM (will be prompted for versions later)" off
+        12 "C# IDE Xamarin Studio" off)
 choices=$("${menu[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
 if [[ $? -ne 0 ]]; then
@@ -118,24 +120,30 @@ do
       SETUP_RUBY=0
   ;;
   4)
-      SETUP_DB=0
+      SETUP_JDK6=0
   ;;
   5)
-      SETUP_HOMEBREW_COMMONS=0
+      SETUP_JDK7=0
   ;;
   6)
-      SETUP_DEV_APPS=0
+      SETUP_DB=0
   ;;
   7)
-      SETUP_COMMON_APPS=0
+      SETUP_HOMEBREW_COMMONS=0
   ;;
   8)
-      SETUP_SPECIALTY_APPS=0
+      SETUP_DEV_APPS=0
   ;;
   9)
-      SETUP_IE=0
+      SETUP_COMMON_APPS=0
   ;;
   10)
+      SETUP_SPECIALTY_APPS=0
+  ;;
+  11)
+      SETUP_IE=0
+  ;;
+  12)
       SETUP_XAMARIN=0
   ;;
   esac
@@ -143,7 +151,7 @@ done
 
 
 step "Bootstrapping homebrew: "
-try brew bundle $ROOT/brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err
+try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err)
 if [[ $? -ne 0 ]]; then
     cat /tmp/dev-strap.err
     rm /tmp/dev-strap.err
@@ -268,7 +276,7 @@ fi
 
 step "Installing common required libraries: "
 if [[ $SETUP_HOMEBREW_COMMONS ]]; then
-  try brew bundle $ROOT/brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err
+  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -380,9 +388,61 @@ else
     skip
 fi
 
+step "Installing java version manager: "
+if [[ $SETUP_JDK6 || $SETUP_JDK7 ]]; then
+    brew list jenv > /dev/null 2>/dev/null
+    if [[ $? -ne 0 ]]; then
+      try brew install jenv > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+        cat /tmp/dev-strap.err
+        rm /tmp/dev-strap.err
+      else
+        jenv init -
+      fi
+    fi
+    next
+else
+    skip
+fi
+
+step "Installing java 6: "
+if [[ $SETUP_JDK6 ]]; then
+    jenv versions | grep '1.6' > /dev/null 2>/dev/null
+    if [[ $? -ne 0 ]]; then
+      try brew cask install java6 > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+          cat /tmp/dev-strap.err
+          rm /tmp/dev-strap.err
+      else
+        jenv add /Library/Java/Home
+      fi
+    fi
+    next
+else
+    skip
+fi
+
+step "Installing java 7: "
+if [[ $SETUP_JDK7 ]]; then
+    jenv versions | grep '1.7' > /dev/null 2>/dev/null
+    if [[ $? -ne 0 ]]; then
+      try brew cask install java7 > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+        cat /tmp/dev-strap.err
+        rm /tmp/dev-strap.err
+      else
+        EXACT_JAVA7_VERSION=$(brew cask info java7 | grep java7: | awk -F' ' '{print $2}')
+        jenv add /Library/Java/JavaVirtualMachines/jdk${EXACT_JAVA7_VERSION}.jdk/Contents/Home/
+      fi
+    fi
+    next
+else
+    skip
+fi
+
 step "Installing various developer tools: "
 if [[ $SETUP_DEV_APPS ]]; then
-  try brew bundle $ROOT/brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err
+  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -394,7 +454,7 @@ fi
 
 step "Installing various everyday applications: "
 if [[ $SETUP_COMMON_APPS ]]; then
-  try brew bundle $ROOT/brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err
+  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -406,7 +466,7 @@ fi
 
 step "Installing special applications: "
 if [[ $SETUP_SPECIALTY_APPS ]]; then
-  try brew bundle $ROOT/brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err
+  try $(while read in; do brew "$in"; done < $ROOT/brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
