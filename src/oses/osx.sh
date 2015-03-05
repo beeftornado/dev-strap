@@ -404,7 +404,7 @@ if [[ $SETUP_JDK6 || $SETUP_JDK7 ]]; then
         cat /tmp/dev-strap.err
         rm /tmp/dev-strap.err
       else
-        jenv init -
+        $(jenv init -)
       fi
     fi
     next
