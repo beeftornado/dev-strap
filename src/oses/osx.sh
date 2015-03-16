@@ -62,7 +62,7 @@ if [[ $CONTINUE -eq 1 ]]; then
 
   step "Installing homebrew: "
   if [ ! -f /usr/local/bin/brew ]; then
-    try ruby -e "$(\curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+    try ruby -e "$(\curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     next
   else
     skip
