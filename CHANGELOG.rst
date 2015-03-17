@@ -1,16 +1,35 @@
 Changelog
 =========
 
-%%version%% (unreleased)
-------------------------
+0.4 (2015-03-17)
+----------------
+
+New
+~~~
+
+- Scala. [Casey Duquette]
+
+Fix
+~~~
+
+- Changes due to dependency changes. [Casey Duquette]
+
+0.3.2 (2015-03-16)
+------------------
 
 Changes
 ~~~~~~~
+
+- Update changelog. [Casey Duquette]
 
 - Update license file. [Casey Duquette]
 
 Other
 ~~~~~
+
+- Update osx.sh. [Casey]
+
+  Homebrew installer moved
 
 - Hide the jenv init output. [Casey Duquette]
 
