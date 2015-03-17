@@ -1,10 +1,10 @@
-update || true
+update
 
 # taps
-tap homebrew/dupes || true
-tap beeftornado/rmtree || true
+tap homebrew/dupes
+tap beeftornado/rmtree
 
 # casks support
-tap caskroom/cask || true
-tap phinze/cask || true
-tap caskroom/versions || true
+tap caskroom/cask
+tap phinze/cask
+tap caskroom/versions

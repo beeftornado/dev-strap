@@ -96,11 +96,12 @@ options=(1 "Python with pyenv (version manager), pip, and virtualenv" on
         5 "Java 7 with jenv (version manager)" on
         6 "Mysql and Mongo" on
         7 "Common libraries from Homebrew" on
-        8 "Development tools (apps like editors and IDEs)" on
-        9 "Additional apps for normal people (like chrome, adium, vlc)" off
-        10 "beeftornado's additional specialty apps" off
-        11 "Internet Explorer VM (will be prompted for versions later)" off
-        12 "C# IDE Xamarin Studio" off)
+        8 "Scala with svm (version manager) and sbt" off
+        9 "Development tools (apps like editors and IDEs)" off
+        10 "Additional apps for normal people (like chrome, adium, vlc)" off
+        11 "beeftornado's additional specialty apps" off
+        12 "Internet Explorer VM (will be prompted for versions later)" off
+        13 "C# IDE Xamarin Studio" off)
 choices=$("${menu[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
 if [[ $? -ne 0 ]]; then
@@ -139,18 +140,21 @@ do
       SETUP_HOMEBREW_COMMONS=0
   ;;
   8)
-      SETUP_DEV_APPS=0
+      SETUP_SCALA=0
   ;;
   9)
-      SETUP_COMMON_APPS=0
+      SETUP_DEV_APPS=0
   ;;
   10)
-      SETUP_SPECIALTY_APPS=0
+      SETUP_COMMON_APPS=0
   ;;
   11)
-      SETUP_IE=0
+      SETUP_SPECIALTY_APPS=0
   ;;
   12)
+      SETUP_IE=0
+  ;;
+  13)
       SETUP_XAMARIN=0
   ;;
   esac
@@ -158,7 +162,7 @@ done
 
 
 step "Bootstrapping homebrew: "
-try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err)
+try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in || true; fi; fi; done < brew/Brewfile-Init > /dev/null 2>/tmp/dev-strap.err)
 if [[ $? -ne 0 ]]; then
     cat /tmp/dev-strap.err
     rm /tmp/dev-strap.err
@@ -172,13 +176,22 @@ next
 
 step "Installing python: "
 if [[ $SETUP_PYTHON ]]; then
+    if [[ ! $(which pyenv) ]]; then
+      try brew install pyenv > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+          cat /tmp/dev-strap.err
+          rm /tmp/dev-strap.err
+      fi
+    fi
+
     if [[ $(which python) ]]; then
       # User has a python exe
       PYTHON_VERSION=$(python -V 2>&1 | /usr/bin/awk -F' ' '{print $2}')
       vercomp $PYTHON_VERSION "2.7"
       if [[ $? -eq 2 ]]; then
         # user's python version is less then 2.7
-        try brew upgrade python > /dev/null 2>/tmp/dev-strap.err
+        #try brew upgrade python > /dev/null 2>/tmp/dev-strap.err
+        try pyenv install 2.7.8 > /dev/null 2>/tmp/dev-strap.err
         if [[ $? -ne 0 ]]; then
             cat /tmp/dev-strap.err
             rm /tmp/dev-strap.err
@@ -186,15 +199,7 @@ if [[ $SETUP_PYTHON ]]; then
       fi
     else
       # no python
-      try brew install python > /dev/null 2>/tmp/dev-strap.err
-      if [[ $? -ne 0 ]]; then
-          cat /tmp/dev-strap.err
-          rm /tmp/dev-strap.err
-      fi
-    fi
-
-    if [[ ! $(which pyenv) ]]; then
-      try brew install pyenv > /dev/null 2>/tmp/dev-strap.err
+      try pyenv install 2.7.8 > /dev/null 2>/tmp/dev-strap.err
       if [[ $? -ne 0 ]]; then
           cat /tmp/dev-strap.err
           rm /tmp/dev-strap.err
@@ -205,20 +210,24 @@ else
     skip
 fi
 
+eval "$(pyenv init -)"
+pyenv shell 2.7.8
+PIP=$(pyenv which pip)
+
 step "Installing pip: "
 if [[ $SETUP_PYTHON ]]; then
-    if [ ! -f /usr/local/bin/pip ]; then
+    if [ ! -f $PIP ]; then
       try sudo easy_install pip > /dev/null 2>/tmp/dev-strap.err
       if [[ $? -ne 0 ]]; then
           cat /tmp/dev-strap.err
           rm /tmp/dev-strap.err
       fi
     fi
-    PIP_VERSION=$(/usr/local/bin/pip -V | /usr/bin/awk -F' ' '{print $2}')
+    PIP_VERSION=$($PIP -V | /usr/bin/awk -F' ' '{print $2}')
     vercomp $PIP_VERSION "1.5"
     if [[ $? -eq 2 ]]; then
       # user's pip version is less then 1.5
-      try /usr/local/bin/pip install --upgrade pip > /dev/null 2>/tmp/dev-strap.err
+      try $PIP install --upgrade pip > /dev/null 2>/tmp/dev-strap.err
       if [[ $? -ne 0 ]]; then
           cat /tmp/dev-strap.err
           rm /tmp/dev-strap.err
@@ -232,10 +241,10 @@ fi
 step "Installing python virtual env: "
 if [[ $SETUP_PYTHON ]]; then
   if [[ ! $(which virtualenv) ]]; then
-    try pip install virtualenv virtualenvwrapper > /dev/null 2>/tmp/dev-strap.err
+    try $PIP install virtualenv virtualenvwrapper >/tmp/dev-strap.err 2>/tmp/dev-strap.err
     if [[ $? -ne 0 ]]; then
-        cat /tmp/dev-strap.err
-        rm /tmp/dev-strap.err
+      cat /tmp/dev-strap.err
+      rm /tmp/dev-strap.err
     fi
   fi
   next
@@ -246,13 +255,12 @@ fi
 step "Bootstrapping virtualenvwrapper: "
 if [[ $SETUP_PYTHON ]]; then
     # Find the virtualenvwrapper shell script
-    if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-      VE_WRAPPER_LOC="/usr/local/bin/virtualenvwrapper.sh"
+    $(which virtualenvwrapper.sh)
+    try $(which virtualenvwrapper.sh) >/tmp/dev-strap.err 2>/tmp/dev-strap.err
+    if [[ $? -ne 0 ]]; then
+      cat /tmp/dev-strap.err
+      rm /tmp/dev-strap.err
     fi
-    if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
-      VE_WRAPPER_LOC="/usr/local/share/python/virtualenvwrapper.sh"
-    fi
-    try source $VE_WRAPPER_LOC > /dev/null 2>/dev/null
 
     egrep "export VIRTUALENVWRAPPER_PYTHON=" ~/.bashrc >/dev/null
     if [[ $? -ne 0 ]]; then
@@ -283,7 +291,7 @@ fi
 
 step "Installing common required libraries: "
 if [[ $SETUP_HOMEBREW_COMMONS ]]; then
-  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in || true; fi; fi; done < brew/Brewfile-Dependencies > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -328,16 +336,34 @@ if [[ $SETUP_NODEJS ]]; then
     nvm --version > /dev/null 2>/dev/null
     if [[ $? -ne 0 ]]; then
         # missing nvm
-        try curl -s https://raw.github.com/creationix/nvm/master/install.sh | sh > /dev/null 2>/dev/null
-        try source ~/.nvm/nvm.sh > /dev/null 2>/dev/null
+        #try curl -s https://raw.github.com/creationix/nvm/master/install.sh | sh > /dev/null 2>/dev/null
+        #try source ~/.nvm/nvm.sh > /dev/null 2>/dev/null
+        try brew install nvm > /dev/null 2>/tmp/dev-strap.err
+        if [[ $? -ne 0 ]]; then
+          cat /tmp/dev-strap.err
+          rm /tmp/dev-strap.err
+        fi
     else
         NVM_VERSION=$(nvm --version | /usr/bin/awk -F' ' '{print $2}' | /usr/bin/awk -F'v' '{print $2}')
         vercomp $NVM_VERSION "0.4"
         if [[ $? -eq 2 ]]; then
             # user's nvm version is less then 0.4
-            try curl -s https://raw.github.com/creationix/nvm/master/install.sh | sh > /dev/null 2>/dev/null
-            try source ~/.nvm/nvm.sh > /dev/null 2>/dev/null
+            try brew install nvm > /dev/null 2>/tmp/dev-strap.err
+            if [[ $? -ne 0 ]]; then
+              cat /tmp/dev-strap.err
+              rm /tmp/dev-strap.err
+            fi
         fi
+    fi
+    export NVM_DIR=~/.nvm
+    source $(brew --prefix nvm)/nvm.sh
+    egrep "export NVM_DIR=~/\.nvm" ~/.bashrc >/dev/null
+    if [[ $? -ne 0 ]]; then
+      try echo 'export NVM_DIR=~/.nvm' >> ~/.bashrc
+    fi
+    egrep "source \$\(brew --prefix nvm\)/nvm\.sh" ~/.bashrc >/dev/null
+    if [[ $? -ne 0 ]]; then
+      try echo 'source $(brew --prefix nvm)/nvm.sh' >> ~/.bashrc
     fi
     next
 else
@@ -404,7 +430,12 @@ if [[ $SETUP_JDK6 || $SETUP_JDK7 ]]; then
         cat /tmp/dev-strap.err
         rm /tmp/dev-strap.err
       else
-        $(jenv init -)
+        eval "$(jenv init -)"
+      fi
+      egrep "\$HOME/\.jenv/bin" ~/.bashrc >/dev/null
+      if [[ $? -ne 0 ]]; then
+        try echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bashrc
+        try echo 'eval "$(jenv init -)"' >> ~/.bashrc
       fi
     fi
     next
@@ -447,9 +478,56 @@ else
     skip
 fi
 
+step "Installing Scala: "
+if [[ $SETUP_SCALA ]]; then
+  if [[ ! $(which svm) ]]; then
+    try curl https://raw.githubusercontent.com/yuroyoro/svm/master/svm -o /usr/local/bin/svm > /dev/null 2>/dev/null
+    try chmod 755 /usr/local/bin/svm
+    egrep "export SCALA_HOME=~/\.svm/current/rt" ~/.bashrc >/dev/null
+    if [[ $? -ne 0 ]]; then
+      try echo 'export SCALA_HOME=~/.svm/current/rt' >> ~/.bashrc
+      try echo 'export PATH=$SCALA_HOME/bin:$PATH' >> ~/.bashrc
+    fi
+    export SCALA_HOME=~/.svm/current/rt
+    export PATH=$SCALA_HOME/bin:$PATH
+  fi
+
+  if [[ ! $(svm list | grep 2.9.2) ]]; then
+    try svm install 2.9.2 2>/tmp/dev-strap.err
+    if [[ $? -ne 0 ]]; then
+      cat /tmp/dev-strap.err
+      rm /tmp/dev-strap.err
+    fi
+  fi
+
+  if [[ ! $(svm list | grep 2.9.3) ]]; then
+    try svm install 2.9.3 2>/tmp/dev-strap.err
+    if [[ $? -ne 0 ]]; then
+      cat /tmp/dev-strap.err
+      rm /tmp/dev-strap.err
+    fi
+  fi
+
+  if [[ ! $(svm list | grep 2.10.5) ]]; then
+    try svm install 2.10.5 2>/tmp/dev-strap.err
+    if [[ $? -ne 0 ]]; then
+      cat /tmp/dev-strap.err
+      rm /tmp/dev-strap.err
+    fi
+  fi
+
+  if [[ ! $(which sbt) ]]; then
+    try brew install sbt
+  fi
+
+  next
+else
+  skip
+fi
+
 step "Installing various developer tools: "
 if [[ $SETUP_DEV_APPS ]]; then
-  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in || true; fi; fi; done < brew/Brewfile-DevApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -461,7 +539,7 @@ fi
 
 step "Installing various everyday applications: "
 if [[ $SETUP_COMMON_APPS ]]; then
-  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in || true; fi; fi; done < brew/Brewfile-EverydayApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err
@@ -473,7 +551,7 @@ fi
 
 step "Installing special applications: "
 if [[ $SETUP_SPECIALTY_APPS ]]; then
-  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in; fi; fi; done < brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err)
+  try $(while read in; do echo "$in" | grep '#' > /dev/null; if [ $? -ne 0 ]; then if [ "$in" != "" ]; then brew $in || true; fi; fi; done < brew/Brewfile-PersonalApps > /dev/null 2>/tmp/dev-strap.err)
   if [[ $? -ne 0 ]]; then
       cat /tmp/dev-strap.err
       rm /tmp/dev-strap.err

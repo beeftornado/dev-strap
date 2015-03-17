@@ -1,16 +1,17 @@
 # brew cask install dev tools
-cask install iterm2 || true
-cask install atom || true
-cask install brackets || true
-cask install pycharm-ce || true
-cask install eclipse || true
-cask install cord || true
-cask install mysqlworkbench || true
-cask install sequel-pro || true
-cask install sourcetree || true
-cask install sqldeveloper || true
-cask install textmate || true
-cask install virtualbox || true
-cask install codelite || true
-cask install intellij-idea-ce || true
-install wxwidgets || true
+cask install iterm2
+cask install atom
+cask install brackets
+cask install pycharm-ce
+cask install eclipse
+cask install cord
+cask install mysqlworkbench
+cask install sequel-pro
+cask install sourcetree
+cask install sqldeveloper
+cask install textmate
+cask install virtualbox
+cask install codelite
+cask install intellij-idea-ce
+install wxwidgets
+cask install menumeters
