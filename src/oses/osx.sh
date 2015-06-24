@@ -385,6 +385,10 @@ if [[ $SETUP_NODEJS ]]; then
     if [[ $? -ne 0 ]]; then
       try echo 'source $(brew --prefix nvm)/nvm.sh' >> ~/.bashrc
     fi
+
+    # Try to initialize it in current shell
+    try source ~/.bashrc
+
     next
 else
     skip
@@ -399,6 +403,9 @@ if [[ $SETUP_NODEJS ]]; then
     if [[ $? -ne 0 ]]; then
       try echo 'export PATH=/usr/local/share/npm/bin:$PATH' >> ~/.bashrc
     fi
+
+    # Try to initialize it in current shell
+    try source ~/.bashrc
 
     next
 else
@@ -420,6 +427,8 @@ if [[ $SETUP_RUBY ]]; then
         # User needs rvm
         try \curl -sSL https://get.rvm.io | bash -s stable > /dev/null 2>/dev/null
     fi
+    # Try to initialize it in current shell
+    try source ~/.bashrc
     next
 else
     skip
@@ -458,6 +467,8 @@ if [[ $SETUP_JDK6 || $SETUP_JDK7 ]]; then
         try echo 'eval "$(jenv init -)"' >> ~/.bashrc
       fi
     fi
+    # Try to initialize it in current shell
+    try source ~/.bashrc
     next
 else
     skip
