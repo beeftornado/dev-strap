@@ -177,8 +177,25 @@ if [[ $? -ne 0 ]]; then
 fi
 next
 
+step "Installing openssl: "
+if [[ $SETUP_PYTHON ]]; then
+  if [[ -e /usr/local/opt/openssl ]]; then
+    skip
+  else
+    try brew install openssl > /dev/null 2>/tmp/dev-strap.err
+    if [[ $? -ne 0 ]]; then
+      cat /tmp/dev-strap.err
+      rm /tmp/dev-strap.err
+    fi
+    next
+  fi
+else
+  skip
+fi
+
 step "Installing python: "
 if [[ $SETUP_PYTHON ]]; then
+    # Install pyenv - python version manager
     if [[ ! $(which pyenv) ]]; then
       try brew install pyenv > /dev/null 2>/tmp/dev-strap.err
       if [[ $? -ne 0 ]]; then
@@ -187,35 +204,53 @@ if [[ $SETUP_PYTHON ]]; then
       fi
     fi
 
-    if [[ $(which python) ]]; then
-      # User has a python exe
-      PYTHON_VERSION=$(python -V 2>&1 | /usr/bin/awk -F' ' '{print $2}')
-      vercomp $PYTHON_VERSION "2.7"
-      if [[ $? -eq 2 ]]; then
-        # user's python version is less then 2.7
-        #try brew upgrade python > /dev/null 2>/tmp/dev-strap.err
-        try pyenv install 2.7.8 > /dev/null 2>/tmp/dev-strap.err
-        if [[ $? -ne 0 ]]; then
-            cat /tmp/dev-strap.err
-            rm /tmp/dev-strap.err
-        fi
-      fi
-    else
-      # no python
-      try pyenv install 2.7.8 > /dev/null 2>/tmp/dev-strap.err
+    # Ensure that pyenv-virtualenv is available
+    if [[ $(which pyenv) ]]; then
+      eval "$(pyenv init -)"
+      try brew install pyenv-virtualenv > /dev/null 2>/tmp/dev-strap.err
       if [[ $? -ne 0 ]]; then
-          cat /tmp/dev-strap.err
-          rm /tmp/dev-strap.err
+        cat /tmp/dev-strap.err
+        rm /tmp/dev-strap.err
+      else
+        # It worked, initialize it
+        if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
       fi
     fi
+
+    PYENV_INSTALL_PYTHON=0
+
+    # Make sure there is a python version other than system available
+    if [[ `pyenv versions | grep -v system | wc -l` -eq 0 ]]; then
+      # No other version available, install one, with python/openssl build workaround
+      PYENV_INSTALL_PYTHON=1
+    else
+      # Make sure there is a rather recent flavor of 2.x (non-system) available
+      PYTHON_VERSION=`pyenv versions --bare | sort | egrep "^2.7" | tail -1`
+      vercomp $PYTHON_VERSION "2.7"
+      if [[ $? -eq 2 ]]; then
+        # user's python version is less than 2.7
+        PYENV_INSTALL_PYTHON=1
+      fi
+    fi
+
+    if [[ $PYENV_INSTALL_PYTHON -eq 1 ]]; then
+      CFLAGS="-I/usr/local/opt/openssl/include" CPPFLAGS="-I/usr/local/opt/openssl/include" LDFLAGS="-L/usr/local/opt/openssl/lib" try pyenv install 2.7.8 > /dev/null 2>/tmp/dev-strap.err
+      if [[ $? -ne 0 ]]; then
+        cat /tmp/dev-strap.err
+        rm /tmp/dev-strap.err
+      fi
+    fi
+
+    # User should have all the python stuff installed now, let's initialize it for the current shell and bootstrap it for future shells
+    PYTHON_VERSION=`pyenv versions --bare | sort | egrep "^2.7" | tail -1`
+    eval "$(pyenv init -)"
+    pyenv shell $PYTHON_VERSION
+    PIP=$(pyenv which pip)
+
     next
 else
     skip
 fi
-
-eval "$(pyenv init -)"
-pyenv shell 2.7.8
-PIP=$(pyenv which pip)
 
 step "Installing pip: "
 if [[ $SETUP_PYTHON ]]; then
@@ -241,42 +276,24 @@ else
     skip
 fi
 
-step "Installing python virtual env: "
+step "Bootstrapping pyenv+virtualenv: "
 if [[ $SETUP_PYTHON ]]; then
-  if [[ ! $(which virtualenv) ]]; then
-    try $PIP install virtualenv virtualenvwrapper >/tmp/dev-strap.err 2>/tmp/dev-strap.err
-    if [[ $? -ne 0 ]]; then
-      cat /tmp/dev-strap.err
-      rm /tmp/dev-strap.err
-    fi
+  egrep "pyenv init -" ~/.bashrc > /dev/null
+  if [[ $? -ne 0 ]]; then
+    try echo 'if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi' >> ~/.bashrc
   fi
+
+  egrep "pyenv virtualenv-init -" ~/.bashrc > /dev/null
+  if [[ $? -ne 0 ]]; then
+    try echo 'if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi' >> ~/.bashrc
+  fi
+
+  # Try to initialize it in current shell
+  try source ~/.bashrc
+
   next
 else
   skip
-fi
-
-step "Bootstrapping virtualenvwrapper: "
-if [[ $SETUP_PYTHON ]]; then
-    # Find the virtualenvwrapper shell script
-    $(which virtualenvwrapper.sh)
-    try $(which virtualenvwrapper.sh) >/tmp/dev-strap.err 2>/tmp/dev-strap.err
-    if [[ $? -ne 0 ]]; then
-      cat /tmp/dev-strap.err
-      rm /tmp/dev-strap.err
-    fi
-
-    egrep "export VIRTUALENVWRAPPER_PYTHON=" ~/.bashrc >/dev/null
-    if [[ $? -ne 0 ]]; then
-      try echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python' >> ~/.bashrc
-    fi
-
-    egrep "source ${VE_WRAPPER_LOC}" ~/.bashrc >/dev/null
-    if [[ $? -ne 0 ]]; then
-      try echo "source ${VE_WRAPPER_LOC}" >> ~/.bashrc
-    fi
-    next
-else
-    skip
 fi
 
 step "Installing gevent dependency libevent: "
