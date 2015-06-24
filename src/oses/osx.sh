@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Set _DEBUG="on" to turn on debugging
+
 . $( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )/config.sh
 . $ROOT/src/utilities/functions.sh
 
+DEBUG set -x
 
 # Use step(), try(), and next() to perform a series of commands and print
 # [  OK  ] or [FAILED] at the end. The step as a whole fails if any individual

@@ -690,3 +690,8 @@ confirm() {
         esac
     done
 }
+
+DEBUG() {
+    # Usage: DEBUG echo "File is $filename"
+    [ "$_DEBUG" == "on" ] &&  $@
+}
