@@ -1,6 +1,44 @@
 Changelog
 =========
 
+0.4.1 (2015-06-24)
+------------------
+
+New
+~~~
+
+- _DEBUG flag. [Casey Duquette]
+
+  Setting _DEBUG to "on" before executing will run the script in debug
+  mode.
+
+Changes
+~~~~~~~
+
+- Update changelog. [Casey Duquette]
+
+- Use absolute paths to Brewfiles. [Casey Duquette]
+
+Fix
+~~~
+
+- When shell profile gets modified, reload the current shell. [Casey
+  Duquette]
+
+  Some programs required some initialization in the bash profile of a
+  user, but subsequent steps might fail unless the user closed the shell
+  and reopened it to load the new settings. This change will do the
+  reloading after steps that make changes to the login script.
+
+- Added logic to handle special case installing python on osx. [Casey
+  Duquette]
+
+  One user on a fresh machine had to specify compiler flags to install
+  python or it would complain about openssl libs not being available. I
+  think this only affects people who use openssl or want to use the
+  openssl from homebrew. I reran it on my computer and it still works
+  okay.
+
 0.4 (2015-03-17)
 ----------------
 
