@@ -25,9 +25,9 @@ cat $ROOT/logo
 echo
 
 # OSX version requirement
-if [[ ! $(sw_vers -productVersion | egrep '10.([89]|10)')  ]]
+if [[ ! $(sw_vers -productVersion | egrep '10.([89]|10|11)')  ]]
 then
-  echo "This script is only certified for OSX versions 10.8 (Mountain Lion), 10.9 (Mavericks), and 10.10 (Yosemite), aborting..."
+  echo "This script is only certified for OSX versions 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite), and 10.11 (El Capitan)(experimental), aborting..."
   exit 1
 fi
 
