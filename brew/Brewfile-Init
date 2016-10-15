@@ -6,5 +6,3 @@ tap beeftornado/rmtree
 
 # casks support
 tap caskroom/cask
-tap phinze/cask
-tap caskroom/versions

@@ -25,9 +25,9 @@ cat $ROOT/logo
 echo
 
 # OSX version requirement
-if [[ ! $(sw_vers -productVersion | egrep '10.([89]|10|11)')  ]]
+if [[ ! $(sw_vers -productVersion | egrep '10.([89]|10|11|12)')  ]]
 then
-  echo "This script is only certified for OSX versions 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite), and 10.11 (El Capitan)(experimental), aborting..."
+  echo "This script is only certified for OSX versions 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite), 10.11 (El Capitan)(experimental), and 10.12 (Sierra)(experimental), aborting..."
   exit 1
 fi
 
@@ -93,11 +93,11 @@ fi
 
 menu=(whiptail --separate-output --title "Install Options" --checklist "\nSelect the dev options you want (I recommend having all):\n\n[spacebar] = toggle on/off" 0 0 0)
 options=(1 "Python with pyenv (version manager), pip, and virtualenv" on
-        2 "NodeJS with nvm (version manager) and npm" on
-        3 "Ruby with rvm (version manager)" on
-        4 "Java 6 with jenv (version manager)" on
-        5 "Java 7 with jenv (version manager)" on
-        6 "Mysql and Mongo" on
+        2 "NodeJS with nvm (version manager) and npm" off
+        3 "Ruby with rvm (version manager)" off
+        4 "Java 6 with jenv (version manager)" off
+        5 "Java 7 with jenv (version manager)" off
+        6 "Mysql and Mongo" off
         7 "Common libraries from Homebrew" on
         8 "Scala with svm (version manager) and sbt" off
         9 "Development tools (apps like editors and IDEs)" off

@@ -5,7 +5,6 @@ install homebrew/dupes/rsync
 install ctags
 install reattach-to-user-namespace
 install git-extras
-install caskroom/cask/brew-cask
 install libevent
 install nasm
 install openssl
@@ -22,3 +21,4 @@ install ssh-copy-id
 install brew-rmtree
 install libxml2
 install libxslt
+install git
